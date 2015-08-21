@@ -437,12 +437,12 @@ impl <'a> Stream for &'a str {
 }
 
 impl <'a, T> Stream for &'a [T]
-    where T: Positioner {
-    type Item = &'a T;
+    where T: Positioner + Copy {
+    type Item = T;
     type Range = &'a [T];
-    fn uncons(self) -> Result<(&'a T, &'a [T]), Error<&'a T, &'a [T]>> {
+    fn uncons(self) -> Result<(T, &'a [T]), Error<T, &'a [T]>> {
         if self.len() > 0 {
-            Ok((&self[0], &self[1..]))
+            Ok((self[0], &self[1..]))
         }
         else {
             Err(Error::end_of_input())
